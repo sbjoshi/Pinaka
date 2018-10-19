@@ -1,15 +1,24 @@
 ## INTRUCTIONS to configure Pinaka in Benchexec:
-
+* Clone this repository
+	```
+	git clone https://github.com/sbjoshi/Pinaka.git
+        cd Pinaka
+        unzip bin.zip
+        cd ..
+	```
 * Get Benchmarks and Benchexec
 	```
 	git clone --depth=1 https://github.com/sosy-lab/sv-benchmarks
 	git clone https://github.com/sosy-lab/benchexec
 	cd benchexec
 	```
-
-* In current directory, copy files pinaka.xml and pinaka-wrapper.sh from svcomp19_config direcotry and copy pinaka binary from bin.zip (unzip first)
-* W.r.t the currecnt working directory, add pinaka.py from svcomp19_config file in 'benchexec/tools' sub-directory.
-
+* Copy relevant files to appropriate places in benchexec
+	```
+	cp ../Pinaka/svcomp19_config/pinaka.xml ../Pinaka/svcomp19_config/pinaka-wrapper.sh .
+        cp ../Pinaka/bin/pinaka .
+        cp ../Pinaka/svcomp19_config/pinaka.py benchexec/tools
+	```
+* Ensure that you modify timelimit, memorylimit and cpuCores in pinaka.xml depending upon the resource limit you have.
 
 ## INTRUCTIONS TO RUN BENCHMARKS:
 * Navigate back to top-level benchexec directory
