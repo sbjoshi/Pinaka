@@ -15,8 +15,8 @@
 * Copy relevant files to appropriate places in benchexec
 	```
 	cp ../Pinaka/svcomp19_config/pinaka.xml ../Pinaka/svcomp19_config/pinaka-wrapper.sh .
-        cp ../Pinaka/bin/pinaka .
-        cp ../Pinaka/svcomp19_config/pinaka.py benchexec/tools
+	cp ../Pinaka/bin/pinaka .
+	cp ../Pinaka/svcomp19_config/pinaka.py benchexec/tools
 	```
 * Ensure that you modify timelimit, memorylimit and cpuCores in pinaka.xml depending upon the resource limit you have.
 
