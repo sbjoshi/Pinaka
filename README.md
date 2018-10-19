@@ -7,8 +7,8 @@
 	cd benchexec
 	```
 
-* In current directory, add files pinaka.xml and pinaka-wrapper.sh and pinaka binary
-* W.r.t the currecnt working directory, add pinaka.py file in 'benchexec/tools' sub-directory.
+* In current directory, copy files pinaka.xml and pinaka-wrapper.sh from svcomp19_config direcotry and copy pinaka binary from bin.zip (unzip first)
+* W.r.t the currecnt working directory, add pinaka.py from svcomp19_config file in 'benchexec/tools' sub-directory.
 
 
 ## INTRUCTIONS TO RUN BENCHMARKS:
@@ -16,7 +16,7 @@
 * To run a set of tasks :
 	```
 	sed -i 's/witness.graphml/${logfile_path_abs}${inputfile_name}-witness.graphml/' pinaka.xml
-	sudo chmod o+wt '/sys/fs/cgroup/cpuset/
+	sudo chmod o+wt '/sys/fs/cgroup/cpuset/'
 	sudo chmod o+wt '/sys/fs/cgroup/cpu,cpuacct/'
 	sudo chmod o+wt '/sys/fs/cgroup/freezer/'
 	sudo chmod o+wt '/sys/fs/cgroup/memory/'
