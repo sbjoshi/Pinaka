@@ -53,3 +53,5 @@ Results i.e. graphml witnesses will be stored in results directory (wrt. pwd).
 	bin/benchexec cpa-seq-validate-correctness-witnesses.xml
 	bin/benchexec cpa-seq-validate-violation-witnesses.xml
 	```
+## REQUIREMENTS:
+   libstdc++.so.6 & gcc 7.3.0 are required on Ubuntu 18.04	
