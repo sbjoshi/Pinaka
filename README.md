@@ -23,8 +23,8 @@
 	sudo swapoff -a
 	bin/benchexec pinaka.xml --tasks="ReachSafety-TASKSET"
 	```
-NOTE: 
--  TASKSET needs to be replaced for the particular task to be run whose names can be found in pinaka.xml file.
+**NOTE:** 
+-  TASKSET needs to be replaced for the particular task to be run whose names can be found in pinaka.xml file.<br />
 		*Example*: bin/benchexec pinaka.xml --tasks="ReachSafety-BitVectors"
 - 'tasks' option may be removed to run the tool on all verification tasks at once. 	
 	  
