@@ -8,7 +8,7 @@
 	```
 
 * In current directory, add files pinaka.xml and pinaka-wrapper.sh and pinaka binary
-* Add pinaka.py file in benchexec/tools directory.
+* W.r.t the currecnt working directory, add pinaka.py file in 'benchexec/tools' sub-directory.
 
 
 ## INTRUCTIONS TO RUN BENCHMARKS:
@@ -16,10 +16,17 @@
 * To run a set of tasks :
 	```
 	sed -i 's/witness.graphml/${logfile_path_abs}${inputfile_name}-witness.graphml/' pinaka.xml
-	bin/benchexec pinaka.xml --tasks="ReachSafety-*"
+	sudo chmod o+wt '/sys/fs/cgroup/cpuset/
+	sudo chmod o+wt '/sys/fs/cgroup/cpu,cpuacct/'
+	sudo chmod o+wt '/sys/fs/cgroup/freezer/'
+	sudo chmod o+wt '/sys/fs/cgroup/memory/'
+	sudo swapoff -a
+	bin/benchexec pinaka.xml --tasks="ReachSafety-TASKSET"
 	```
-NOTE: - Task names can be found in pinaka.xml file.
-	  - 'tasks' option may be removed to run the tool on all verification tasks at once. 	
+NOTE: 
+-  TASKSET needs to be replaced for the particular task to be run whose names can be found in pinaka.xml file.
+		*Example*: bin/benchexec pinaka.xml --tasks="ReachSafety-BitVectors"
+- 'tasks' option may be removed to run the tool on all verification tasks at once. 	
 	  
 Results i.e. graphml witnesses will be stored in results directory (wrt. pwd).
 
