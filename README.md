@@ -1,3 +1,5 @@
+# Pinaka 0.1
+
 ## INTRUCTIONS to configure Pinaka in Benchexec:
 * Clone this repository
 	```
@@ -55,3 +57,6 @@ Results i.e. graphml witnesses will be stored in results directory (wrt. pwd).
 	```
 ## REQUIREMENTS:
    libstdc++.so.6 & gcc 7.3.0 are required on Ubuntu 18.04	
+
+## RELEASE:
+Source code for the tool to be made public by the end of this year
