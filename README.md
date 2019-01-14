@@ -1,6 +1,7 @@
 # Pinaka 0.1
 
-## INTRUCTIONS to configure Pinaka in Benchexec:
+## SVCOMP Style Exectuion
+### INTRUCTIONS to configure Pinaka in Benchexec:
 * Clone this repository
 	```
 	git clone https://github.com/sbjoshi/Pinaka.git
@@ -22,7 +23,7 @@
 	```
 * Ensure that you modify timelimit, memorylimit and cpuCores in pinaka.xml depending upon the resource limit you have.
 
-## INTRUCTIONS TO RUN BENCHMARKS:
+### INTRUCTIONS to run BENCHMARKS:
 * Navigate back to top-level benchexec directory
 * To run a set of tasks :
 	```
@@ -32,7 +33,7 @@
 	sudo chmod o+wt '/sys/fs/cgroup/freezer/'
 	sudo chmod o+wt '/sys/fs/cgroup/memory/'
 	sudo swapoff -a
-	bin/benchexec pinaka.xml --tasks="ReachSafety-TASKSET"
+	bin/benchexec pinaka.xml --tasks="ReachSafety-<TASKSET>"
 	```
 **NOTE:** 
 -  TASKSET needs to be replaced for the particular task to be run whose names can be found in pinaka.xml file.<br />
@@ -55,8 +56,43 @@ Results i.e. graphml witnesses will be stored in results directory (wrt. pwd).
 	bin/benchexec cpa-seq-validate-correctness-witnesses.xml
 	bin/benchexec cpa-seq-validate-violation-witnesses.xml
 	```
-## REQUIREMENTS:
-   libstdc++.so.6 & gcc 7.3.0 are required on Ubuntu 18.04	
+
+## General Execution Instructions
+* Clone this repository
+	```
+	git clone https://github.com/sbjoshi/Pinaka.git
+    cd Pinaka
+    unzip bin.zip
+    cd bin
+	```
+
+* In order to run the tool with it's default settings run the following command:
+	```
+	./pinaka <PATH-TO-SOURCE-FILE>
+	```
+	where \<PATH-TO-SOURCE-FILE\> must strictly point to a **C file**.
+
+**NOTE:** By default Pinaka uses *Depth First Search* as it's search strategy in *Full Incremental Mode*.
+
+* In order to run BFS or Partial Incremental Mode, either one or a combination of the following options may be provided to the tool:
+```
+	./pinaka --bfs --partial-incremental <PATH-TO-SOURCE-FILE>
+```
+
+* Once the run is complete, verification outcome and statistics are printed on the terminal. An outcome of 'VERIFICATION FAILED' implies that the asserting conditions in the source file donot hold. In order to produce a counter-example/error-trace, use the following option:
+```
+	./pinaka --show-trace <PATH-TO-SOURCE-FILE>
+```
+
+* Other options available may be explored from the help menu as follows:
+```
+	./pinaka --help
+	or
+	./pinaka -h
+```
+
+## SYSTEM REQUIREMENTS:
+   libstdc++.so.6 & gcc 7.3.0 are required on **Ubuntu 18.04**	
 
 ## RELEASE:
-Source code for the tool to be made public by the end of this year
+Source code for the tool to be made public by the end of this year.
