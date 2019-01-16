@@ -99,4 +99,4 @@ Source code for the tool to be made public soon.
 
 ## Contributors
    *	Eti Chaudhary, Masters student in the Department of Computer Science and Engineering, IIT Hyderabad
-   *	Saurabh Joshi, Assistant Professor in the Department of Computer Science and Engineering, IIT Hyderabad
+   *	[Saurabh Joshi](https://sbjoshi.github.io), Assistant Professor in the Department of Computer Science and Engineering, IIT Hyderabad
