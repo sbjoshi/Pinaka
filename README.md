@@ -1,13 +1,18 @@
 # Pinaka 0.1
 
 ## How Pinaka works?
-Pinaka is a *single-path* symbolic execution engine incorporated with incremental solving and eager infeasibility checks. It supports two incremental modes: Partial and Full Incremental. In Partial Incremental Mode, a single solver instance is maintained along a single search path. However, a new instance is created everytime a backtrack happens. In Full Incremental Mode, a single solver instance is maintained throughout the search process. Different search paths are verified with the help of activation literals along that path.
+Pinaka is a *single-path* symbolic execution engine incorporated with incremental solving and eager infeasibility checks. The keyword *single-path* means that at any given moment, Pinaka is focussed
+only on one particular parth. Two paths are **never** merged. This may lead to path explosion problem as the number of branches increases in a program. That is where, eager infeasibility checks
+and incremental solving helps. Along a path, when Pinaka encounters a branch, it makes two queries: (1) whether the path can proceed along the _true_ branch, and (2) whether the path can proceed
+along the _false_ branch. If the answer to one of them (or both of these) is a negative, then no further exploration is done along that branch. Since the query to a solver is being made at every branch, incremental solving is used to it efficient. 
+
+It supports two incremental modes: Partial and Full Incremental. In Partial Incremental Mode, a single solver instance is maintained along a single search path. However, a new instance is created everytime a backtrack happens and a different path/branch is to be explored. In Full Incremental Mode, a single solver instance is maintained throughout the search process. Upon backtrack, the old path is logically disabled through the use of activation literals.
 
 ### Full Incremental v/s Partial Incremental
-Full Incremental mode is best suited for smaller programs having few (not too many) branches. As the branching in the test input increases, the solver size increases. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance.
+Full Incremental mode is best suited for smaller programs having a few (not too many) branches. For a program with too many paths, the number of clauses inside the solver keeps increasing as the solver is instantiated only once. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance.
 Consequently, Partial Incremental Mode is better suited for such cases. However, for cases having smaller search trees, the cost of instantiating a new  solver instance on any backtrack penalises Pinaka's performance more than Full Incremental Mode.
 
-In a nutshell, the trade-off between the cost of creating new solver instance versus the size of the solver instance decides the better incremental mode to choose from.
+In a nutshell, the trade-off between the cost of creating new solver instance versus the size of formula inside the solver instance decides which incremental mode to choose.
 
 
 ### Search Strategies
@@ -15,29 +20,29 @@ Pinaka currently supports Breadth First and Depth First Search Stretegies. Altho
 
 
 ### Solver Backend
-Pinaka's incremental solver API have been built on top of CProver's Solver APIs. Pinaka currently supports MiniSAT like solvers such as Glucose-Syrup, MapleSAT etc.
+Pinaka's incremental solver API have been built on top of CProver's SAT Solver APIs. Pinaka currently supports MiniSAT like solvers such as Glucose-Syrup, MapleSAT, MiniSAT etc.
 
-*Pinaka cannot currently support Z3 solver Backend, as the CProver version used itself doesnot provide Z3 APIs.*
+*Pinaka does not currently support Z3 solver Backend, as the CProver version used in Pinaka itself doesnot provide integration of SMT solvers through APIs.* The CPROVER version used to build Pinaka invokes SMT solvers through a shell and the formula is fed through a file, which is meaningless for incremental solving. In fugure, we may look at SMT solver integration through APIs to better exploid incremental solving provided by SMT solvers.
 
 
 ## How is Pinaka different from Symex?
-Pinaka has been built on top-of Symex(commit id: 9b5a72cf992d29a905441f9dfa6802379546e1b7). The following are the key attributes by which Pinaka varies from the Symex version mentioned above.
+Pinaka-0.1 that participated in SVCOMP 2019 has been built on top-of [Symex(commit id: 9b5a72cf992d29a905441f9dfa6802379546e1b7)](https://github.com/diffblue/symex/tree/9b5a72cf992d29a905441f9dfa6802379546e1b7). The following are the key attributes by which Pinaka varies from the Symex version mentioned above.
 
 - *Incremental Solving*: In contrast to Symex, Pinaka seizes the advantage of incremental solving on top of single path symbolic execution
-- *Eager Feasibility Checks*: Pinaka fires a query to the backend solver everytime a branching condition (including looping conditions) are encountered as opposed to Symex which only does so whenever an assert is reached.
-For this reason,(for Pinaka) anytime while looping, an iteration of the loop becomes infeasible, the corresponding query fired at that point will deem UNSAT. *Hence, Pinaka can do away with specifying a unrolling bound on loops.*
+- *Eager Feasibility Checks*: Pinaka fires a query to the backend solver everytime a branching condition (including looping conditions) are encountered as opposed to Symex which only does so whenever an assert is reached. *Note that newer version of Symex has the option to do eager infeasibility, however, this feature is NOT available on the Symex version used in Pinaka-0.1*
+For this reason,(for Pinaka) anytime while looping, during an iteration of a loop when along a path, when the entry condition of the loop becomes infeasible, the corresponding query fired at that point will deem UNSAT.  *Hence, Pinaka does not require specifying an unrolling bound on loops.* However, this also means that Pinaka is _non-terminating_ if there is a non-terminating path in a program for some input.
 - *Recursive Procedures*: The Symex version Pinaka is built on has a buggy support for recursive procedures. Hence, Pinaka uses it's own forked version where the said functionality has been added.
-- *Ternary Operator*: Pinaka also handles ternary operators separately from Symex.
-- *Breadth First Search*: Lastly, for Pinaka also allows BFS search strategy which is not supported on the corresponding Symex version.
+- *Ternary Operator*: Pinaka also handles ternary operators separately from Symex as the Symex version used for Pinaka is buggy.
+- *Breadth First Search*: Pinaka also allows BFS search strategy which is not supported on the corresponding Symex version.
 
 
 ## Pinaka & SVCOMP 2019
 
-- The version of Pinaka that participated in SVCOMP 2019 ran **Depth First Search** in **Partial Incremental Mode**. These choices were simply a result of better performance on SVCOMP Benchmarks.
-- Pinaka made use of **Glucose-Syrup** as its solver back-end for SVCOMP 2019 to yield a better overall performance.
-- Pinaka participated in all ReachSafety sub-categories EXCEPT ReachSafety-Sequentialized, Termination and NoOverflows categories.
+- The version of Pinaka (Pinaka-0.1) that participated in SVCOMP 2019 ran **Depth First Search** in **Partial Incremental Mode**. These choices were simply a result of better performance on SVCOMP Benchmarks during testing phase.
+- Pinaka-0.1 made use of **Glucose-Syrup** as its solver back-end for SVCOMP 2019 to yield a better overall performance.
+- Pinaka-0.1 participated in Termination,  NoOverflows meta-categories and  all ReachSafety sub-categories EXCEPT ReachSafety-Sequentialized. The decision to not participate in other meta-categories because of lack of time for testing Pinaka-0.1 thoroughly on those categories.
 - Currently, Pinaka does not provide support for verification of concurrent programs. Non-participation in MemSafety & SoftwareSystems categories was merely due to a lack of time for the authors to be able to test the tool on these benchmarks.
-Witness Validation for Pinaka is done by CProver framework itself.
+- Witness generation for Pinaka-0.1 is done by CProver framework itself.
 
 ### Proving Termination with Pinaka
 Consider the following snippet :
@@ -52,10 +57,18 @@ while(condition1)
 	//Body
 }
 ```
-As Pinaka, reaches the loop header, the current state continues inside the loop i.e. `condition1 == true`, while the state corresponding `condtion1 == false` is pushed onto a queue. Now further as the state corresponding `condition1 == true` encounters the if-statements, the current state continues down the path `condition2 == true`. Similarly, another state with `condition1 == true` and `condition2 == false` is pushed onto the queue.
+As Pinaka, reaches the loop header along a path, the current state continues inside the loop i.e. `condition1 == true` if it's feasible, while the state corresponding `condtion1 == false` is pushed onto a queue. Now further as the path corresponding to `condition1 == true` encounters the if-statements, the current state continues down the path `condition2 == true` if found feasible. Similarly, another state with `condition1 == true` and `condition2 == false` is pushed onto the queue.
 Further, everytime either the loop-condition or the if-else condition is encountered, corresponding query is fired to the solver to check whether the state is feasible or not. If not, the next state is picked out from the queue and the process continues.
 
-Following from the above description, and assuming the translation by CProver neither over-approximates nor under-approximates the C to GOTO-program conversion, Pinaka only terminates on the input if and only if all the concrete feasible program paths terminate.
+Following from the above description, and **assuming** that CProver does not have over-approximattion or under-approximation during modelling of a C program, Pinaka only terminates for a given input program if and only if all the concrete feasible program paths terminate. 
+
+If there are over-approximations in CProver, then Pinaka may not terminate even though the input program is terminating along all paths for all inputs. Because for a spurious state, the
+entry condition of a loop may continue to be feasible and Pinaka may keep on going iterating through a loop. On the other hand, if there are under-approximations in CProver, then Pinaka
+may falsely declare a program to be terminating, even though there may be a feasible concrete state for which the program may not terminate.
+
+
+Therefore, under the assumption that CProver does not over-approximate or under-approximate, Pinaka will terminate if and only if all the paths of the input program is terminating on all the inputs. In general, Pinaka is a _non-terminating_ tool.
+
 
 One may also note from the above observations that an explicit loop unrolling bound is not required by Pinaka.
 
