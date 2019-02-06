@@ -93,7 +93,7 @@ Now, consider the RIGHT sub-diagram. In this case, the SSA representations for x
 - A feasibility check for the current state (i.e. along y2>=5) will result as SAT. Hence, the process continues and the loop header is hit once again.
 - The edge marked as RED at this point, denotes the path further which will run infinitely.
 As the looping condition further down this path will never return UNSAT from feasibility checks, Pinaka itself wouldnot terminate for such a case.
-![alt text](https://drive.google.com/uc?export=view&id=18wRuJCfzPOinDz3SQgUaNWMFFm30lROT)
+![alt text](https://drive.google.com/uc?export=view&id=18wRuJCfzPOinDz3SQgUaNWMFFm30lROT =500x500)
 
 Following from the above description, and **assuming** that CProver does not have over-approximation or under-approximation during modelling of a C program, Pinaka only terminates for a given input program if and only if all the concrete feasible program paths terminate. 
 
