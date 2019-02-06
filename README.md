@@ -2,25 +2,25 @@
 
 ## How Pinaka works?
 Pinaka is a *single-path* symbolic execution engine incorporated with incremental solving and eager infeasibility checks. The keyword *single-path* means that at any given moment, Pinaka is focused
-only on one particular path. Two paths are **never** merged. This may lead to path explosion problem as the number of branches increases in a program. That is where, eager infeasibility checks
-and incremental solving helps. Along a path, when Pinaka encounters a branch, it makes two queries: (1) whether the path can proceed along the _true_ branch, and (2) whether the path can proceed
-along the _false_ branch. If the answer to one of them (or both of these) is a negative, then no further exploration is done along that branch. Since the query to a solver is being made at every branch, incremental solving is used to it efficient. 
+only on one particular path. Two paths are **never** merged. This may lead to path explosion problem as the number of branches increase in a program. That is where eager infeasibility checks
+and incremental solving help. Along a path, when Pinaka encounters a branch, it makes two queries: (1) whether the path can proceed along the _true_ branch, and (2) whether the path can proceed
+along the _false_ branch. If the answer to one of them (or both of these) is a negative, then no further exploration is done along that branch. Since the query to a solver is being made at every branch, incremental solving is used to make it efficient. 
 
 It supports two incremental modes: Partial and Full Incremental. In Partial Incremental Mode, a single solver instance is maintained along a single search path. However, a new instance is created every time a backtrack happens and a different path/branch is to be explored. In Full Incremental Mode, a single solver instance is maintained throughout the search process. Upon backtrack, the old path is logically disabled through the use of activation literals.
 
 ### Full Incremental v/s Partial Incremental
 Full Incremental mode is best suited for smaller programs having a few (not too many) branches. For a program with too many paths, the number of clauses inside the solver keeps increasing as the solver is instantiated only once. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance.
-Consequently, Partial Incremental Mode is better suited for such cases. However, for cases having smaller search trees, the cost of instantiating a new  solver instance on any backtrack penalises Pinaka's performance more than Full Incremental Mode.
+Consequently, Partial Incremental Mode is better suited for cases where number of paths is very large. However, for cases having smaller search trees, the cost of instantiating a new  solver instance on any backtrack penalises Pinaka's performance more than Full Incremental Mode.
 
-In a nutshell, the trade-off between the cost of creating new solver instance versus the size of formula inside the solver instance decides which incremental mode to choose.
+In a nutshell, the trade-off between the cost of creating new solver instance versus the size of formula inside the solver instance decides which incremental mode will be faster on a given instance.
 
 
 ### Search Strategies
-Pinaka currently supports Breadth First and Depth First Search Strategies. Although, DFS undoubtedly gives a higher performance, BFS was implemented with a plan to serve as a base for incorporating state-selection heuristics or hybrid search-strategies in future.
+Pinaka currently supports Breadth First Search (BFS) and Depth First Search (DFS) Strategies. Although, DFS undoubtedly gives a higher performance, BFS was implemented with a plan to serve as a base for incorporating state-selection heuristics or hybrid search-strategies in future.
 
 
 ### Solver Backend
-Pinaka's incremental solver API have been built on top of CProver's SAT Solver APIs. Pinaka currently supports MiniSAT like solvers such as Glucose-Syrup, MapleSAT, MiniSAT etc.
+Pinaka's incremental solver API have been built on top of CProver's SAT Solver APIs. Pinaka currently supports MiniSAT like solvers such as [Glucose-Syrup](http://www.labri.fr/perso/lsimon/glucose/), [MapleSAT](https://sites.google.com/a/gsd.uwaterloo.ca/maplesat/), [MiniSAT](http://minisat.se/) etc.
 
 *Pinaka does not currently support Z3 solver Backend, as the CProver version used in Pinaka itself does not provide integration of SMT solvers through APIs.* The CPROVER version used to build Pinaka invokes SMT solvers through a shell and the formula is fed through a file, which is meaningless for incremental solving. In future, we may look at SMT solver integration through APIs to better exploit incremental solving provided by SMT solvers.
 
