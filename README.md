@@ -8,6 +8,26 @@ along the _false_ branch. If the answer to one of them (or both of these) is a n
 
 It supports two incremental modes: Partial and Full Incremental. In Partial Incremental Mode, a single solver instance is maintained along a single search path. However, a new instance is created every time a backtrack happens and a different path/branch is to be explored. In Full Incremental Mode, a single solver instance is maintained throughout the search process. Upon backtrack, the old path is logically disabled through the use of activation literals.
 
+Consider the following snippet:
+```cpp
+while(x < 10)
+{
+	y = y + 1
+	
+	if(y < 5)
+	{
+		x = x + 1
+	}
+}
+```
+In the above snippet, suppose via some search path the loop header is reached.  At this point there are two possible paths to take, inside the loop (i.e x<10) or outside the loop (i.e. x>=10).
+
+In Partial Incremental Mode, at this point we have the current state and its associated solver instance. In this mode, as mentioned above that each solver instance only encodes a single path, the current state's solver instance can be further re-used for ONE of the branching paths. Say, we reuse is for the path x<10. A query will now be fired to the solver by encoding the necessary constraints from the last time a query was fired to the current program point with x<10. Now a similar check is run for the state corrsponding (x>=10). Note that for this state a new solver instance will be created and encoded till this program point.
+
+In contrast for Full Incremental Mode, as a single solver instance is maintained throughout the search process, both paths (x<10 and x>=10) will be encoded in the same instance via the use of activation variables. Say, activation variable alpha_1 is used for path along x<10, and alpha_2 for the path along x>=10. Hence, the following conditions get appended to the solver instance:
+	alpha_1 ==> x<10 AND alpha_2 ==> x>=10,  where '==>' has been used for implications.
+For the feasibility checks of the two paths, the corresponding activation variables (i.e. those for the path before the loop header + (alpha_1 or alpha_2)), can be set as solver assumptions. By setting these assumptions, the LHS of the implication becomes TRUE and for the implication to hold the RHS has to be true. Thereby, 'activating' the particular path in the search tree as enforced by the corresponding activation literals.
+
 ### Full Incremental v/s Partial Incremental
 Full Incremental mode is best suited for smaller programs having a few (not too many) branches. For a program with too many paths, the number of clauses inside the solver keeps increasing as the solver is instantiated only once. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance.
 Consequently, Partial Incremental Mode is better suited for cases where number of paths is very large. However, for cases having smaller search trees, the cost of instantiating a new  solver instance on any backtrack penalises Pinaka's performance more than Full Incremental Mode.
@@ -45,20 +65,35 @@ For this reason,(for Pinaka) anytime while looping, during an iteration of a loo
 - Witness generation for Pinaka-0.1 is done by CProver framework itself.
 
 ### Proving Termination with Pinaka
-Consider the following snippet :
+Once again consider the example from above:
 ```cpp
-while(condition1)
+while(x < 10)
 {
-	if(condition2)
+	y = y + 1
+	if(y < 5)
 	{
-		//Statements
+		x = x + 1
 	}
-
-	//Body
 }
 ```
-As Pinaka, reaches the loop header along a path, the current state continues inside the loop i.e. `condition1 == true` if it's feasible, while the state corresponding `condition1 == false` is pushed onto a queue. Now further as the path corresponding to `condition1 == true` encounters the if-statements, the current state continues down the path `condition2 == true` if found feasible. Similarly, another state with `condition1 == true` and `condition2 == false` is pushed onto the queue.
-Further, every time either the loop-condition or the if-else condition is encountered, corresponding query is fired to the solver to check whether the state is feasible or not. If not, the next state is picked out from the queue and the process continues.
+In order to track the workings along the sample program, consider the two cases depicted in the image below. The program point at which the control reaches the loop header has been marked by blue in the diagrams. The dotted branching paths are the paths unexplored for which the corresponding states are pushed onto a queue.
+
+Consider the case depicted in the LEFT sub-diagram, where the control reaches the loop header. As Pinaka makes use of SSA encoding, let us assume, without loss of generality, that last SSA representations for x and y before entering the loop are x1 and y1, with values 8 and 1 respectively.
+- At this point the current states continues along the path x1<10, while the state corresponding x1>=10 is pushed onto the queue. As the current state is feasible (x1 is indeed less than 10), the process continues.
+- Further, the assignment to y is encoded as y2 = y1 + 1
+- Again, a branching state is encountered. Hence, the current state continues along y2<5, while a new state corresponding y2>=5 is pushed onto the queue.
+- A feasibility check is again performed on the current state. As it is deemed feasible, the control goes inside the if block and the assignment to x gets encoded as shown in the figure.
+- At this point, Pinaka again reaches the loop header after which the described process is repeated.
+
+Now, consider the RIGHT sub-diagram. In this case, the SSA representations for x and y before entering the loop are x1 and y1, however, with values 8 and 5.
+- As Pinaka hits the loop header, the current state continues along x1<10, while the state along x1>=10 us pushed onto the queue.
+- A feasibility check for the current state (till the point x1<10) is performed, following which it enters the loop (as the result will be feasible for this particular case).
+- Further, the assignment to y is encoded as y2 = y1 + 1
+- Again, a branching state is hit. At this point, suppose the state corresponding y2<5 is pushed onto the queue and the current state moves alone y2>=5.
+- A feasibility check for the current state (i.e. along y2>=5) will result as SAT. Hence, the process continues and the loop header is hit once again.
+- The edge marked as RED at this point, denotes the path further which will run infinitely.
+As the looping condition further down this path will never return UNSAT from feasibility checks, Pinaka itself wouldnot terminate for such a case.
+![Termination Diagram](https://drive.google.com/file/d/18wRuJCfzPOinDz3SQgUaNWMFFm30lROT/view?usp=sharing)
 
 Following from the above description, and **assuming** that CProver does not have over-approximation or under-approximation during modelling of a C program, Pinaka only terminates for a given input program if and only if all the concrete feasible program paths terminate. 
 
