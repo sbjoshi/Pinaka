@@ -70,6 +70,9 @@ may falsely declare a program to be terminating, even though there may be a feas
 Therefore, under the assumption that CProver does not over-approximate or under-approximate, Pinaka will terminate if and only if all the paths of the input program is terminating on all the inputs. In general, Pinaka is a _non-terminating_ tool.
 
 
+Note that Pinaka creates fresh copies of the variables (SSA style) that are modified in the loop every time a new iteration is traversed in a path to capture different set of values that a 
+program variable may hold in different iterations.
+
 One may also note from the above observations that an explicit loop unrolling bound is not required by Pinaka.
 
 ## General Execution Instructions
