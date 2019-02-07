@@ -1,7 +1,10 @@
 # Pinaka 0.1
 
 - [How Pinaka works?](#how-pinaka-works)
-- [How Pinaka is different from Symex?](#how-pinaka-is-different-from-symex)
+- [How is Pinaka different from Symex?](#how-is-pinaka-different-from-symex)
+- [Pinaka & SVCOMP 2019](#pinaka-svcomp-2019)
+- [General Execution Instructions](#general-execution-instructions)
+- [SVCOMP Style Execution](#svcomp-style-execution)
 
 
 
