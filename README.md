@@ -1,7 +1,7 @@
 # Pinaka 0.1
 
-- [How Pinaka works?](#how-pinaka-works?)
-- [How Pinaka is different from Symex?](#how-pinaka-is-different-from-symex?)
+- [How Pinaka works?](#how-pinaka-works)
+- [How Pinaka is different from Symex?](#how-pinaka-is-different-from-symex)
 
 
 
