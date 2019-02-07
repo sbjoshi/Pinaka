@@ -2,10 +2,18 @@
 
 - [How Pinaka works?](#how-pinaka-works)
 	* [Full Incremental v/s Partial Incremental](#full-incremental-vs-partial-incremental)
+	* [Search Strategies](#search-strategies)
+	* [Solver Backend](#solver-backend)
 - [How is Pinaka different from Symex?](#how-is-pinaka-different-from-symex)
 - [Pinaka in SVCOMP 2019](#pinaka-in-svcomp-2019)
+	* [Proving Termination with Pinaka](#proving-termination-with-pinaka)
 - [General Execution Instructions](#general-execution-instructions)
 - [SVCOMP Style Execution](#svcomp-style-execution)
+	* [INSTRUCTIONS to configure Pinaka in Benchexec](#instructions-to-configure-pinaka-in-benchexec)
+	* [InSTRUCTIONS to run BENCHMARKS](#instructions-to-run-benchmarks)
+- [System Requirements](#system-requirements)
+- [Contributors](#contributors)
+- [Acknowledgements](#acknowledgements)
 
 
 
