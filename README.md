@@ -1,6 +1,7 @@
 # Pinaka 0.1
 
 - [How Pinaka works?](#how-pinaka-works)
+	* [Full Incremental v/s Partial Incremental](#full-incremental-vs-partial-incremental)
 - [How is Pinaka different from Symex?](#how-is-pinaka-different-from-symex)
 - [Pinaka in SVCOMP 2019](#pinaka-in-svcomp-2019)
 - [General Execution Instructions](#general-execution-instructions)
