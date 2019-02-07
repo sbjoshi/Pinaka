@@ -31,28 +31,28 @@ In contrast, for Full Incremental Mode, as a single solver instance is maintaine
 For the feasibility checks of the path going inside the loop,  the corresponding activation variable ``alpha_1``,  in addition to those activation literals for the path before the loop header can be set as solver assumptions. By setting these assumptions, the Left Hand Side (LHS) of the implication becomes TRUE and for the implication to hold the constraints on the Right Hand Side (RHS) is enforced. Thereby, _activating_ the particular path in the search tree as enforced by the corresponding activation literals. Upon back track, a new activation literal ``alpha_2`` is introduced to enforce the alternate branch along ``x>=10``. Now, ``alpha_2`` as well as ``NOT alpha_1`` is set as assumptions to activate the alternate path while logically disabling the previous path.
 
 ### Full Incremental v/s Partial Incremental
-Full Incremental mode is best suited for smaller programs having a few (not too many) branches. For a program with too many paths, the number of clauses inside the solver keeps increasing as the solver is instantiated only once. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance.
+Full Incremental mode is best suited for smaller programs having a few (not too many) branches. For a program with too many paths, the number of clauses inside the solver keeps increasing as the solver is instantiated only once. Hence, when trying to verify a particular search path, all the other constraints (for the rest of the search tree explored so far) slow down the solver performance. Also the memory footprint keeps increasing in Full Incremental mode.
 Consequently, Partial Incremental Mode is better suited for cases where number of paths is very large. However, for cases having smaller search trees, the cost of instantiating a new  solver instance on any backtrack penalises Pinaka's performance more than Full Incremental Mode.
 
 In a nutshell, the trade-off between the cost of creating new solver instance versus the size of formula inside the solver instance decides which incremental mode will be faster on a given instance.
 
 
 ### Search Strategies
-Pinaka currently supports Breadth First Search (BFS) and Depth First Search (DFS) Strategies. Although, DFS undoubtedly gives a higher performance, BFS was implemented with a plan to serve as a base for incorporating state-selection heuristics or hybrid search-strategies in future.
+Pinaka currently supports Breadth First Search (BFS) and Depth First Search (DFS) Strategies. Although, DFS undoubtedly gives a better performance, BFS was implemented with a plan to serve as a base for incorporating state-selection heuristics or hybrid search-strategies in future.
 
 
 ### Solver Backend
-Pinaka's incremental solver API have been built on top of CProver's SAT Solver APIs. Pinaka currently supports MiniSAT like solvers such as [Glucose-Syrup](http://www.labri.fr/perso/lsimon/glucose/), [MapleSAT](https://sites.google.com/a/gsd.uwaterloo.ca/maplesat/), [MiniSAT](http://minisat.se/) etc.
+Pinaka's incremental solver API have been built on top of [CProver](http://www.cprover.org)'s SAT Solver APIs. Pinaka currently supports MiniSAT like solvers such as [Glucose-Syrup](http://www.labri.fr/perso/lsimon/glucose/), [MapleSAT](https://sites.google.com/a/gsd.uwaterloo.ca/maplesat/), [MiniSAT](http://minisat.se/) etc.
 
 *Pinaka does not currently support Z3 solver Backend, as the CProver version used in Pinaka itself does not provide integration of SMT solvers through APIs.* The CPROVER version used to build Pinaka invokes SMT solvers through a shell and the formula is fed through a file, which is meaningless for incremental solving. In future, we may look at SMT solver integration through APIs to better exploit incremental solving provided by SMT solvers.
 
 
 ## How is Pinaka different from Symex?
-Pinaka-0.1 that participated in SVCOMP 2019 has been built on top-of [Symex(commit id: 9b5a72cf992d29a905441f9dfa6802379546e1b7)](https://github.com/diffblue/symex/tree/9b5a72cf992d29a905441f9dfa6802379546e1b7). The following are the key attributes by which Pinaka varies from the Symex version mentioned above.
+Pinaka-0.1 that participated in SVCOMP 2019 has been built on top-of [Symex(commit id: 9b5a72cf992d29a905441f9dfa6802379546e1b7)](https://github.com/diffblue/symex/tree/9b5a72cf992d29a905441f9dfa6802379546e1b7). The following are the key attributes by which Pinaka varies from the Symex version mentioned above. Whenever we mention Symex in this section, we mention the version referred to above.
 
 - *Incremental Solving*: In contrast to Symex, Pinaka seizes the advantage of incremental solving on top of single path symbolic execution
 - *Eager Feasibility Checks*: Pinaka fires a query to the backend solver every time a branching condition (including looping conditions) are encountered as opposed to Symex which only does so whenever an assert is reached. *Note that newer version of Symex has the option to do eager infeasibility, however, this feature is NOT available on the Symex version used in Pinaka-0.1*
-For this reason,(for Pinaka) anytime while looping, during an iteration of a loop when along a path, when the entry condition of the loop becomes infeasible, the corresponding query fired at that point will deem UNSAT.  *Hence, Pinaka does not require specifying an unrolling bound on loops.* However, this also means that Pinaka is _non-terminating_ if there is a non-terminating path in a program for some input.
+For this reason,(for Pinaka) while exploring a loop iteration along a path, when the entry condition of the loop becomes infeasible, the corresponding query fired at that point will deem UNSAT.  *Hence, Pinaka does not require specifying an unrolling bound on loops.* However, this also means that Pinaka is potentially _non-terminating_ if there is a non-terminating path in a program for some input.
 - *Recursive Procedures*: The Symex version Pinaka is built on has a buggy support for recursive procedures. Hence, Pinaka uses it's own forked version where the said functionality has been added.
 - *Ternary Operator*: Pinaka also handles ternary operators separately from Symex as the Symex version used for Pinaka is buggy.
 - *Breadth First Search*: Pinaka also allows BFS search strategy which is not supported on the corresponding Symex version.
