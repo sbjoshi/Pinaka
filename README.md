@@ -2,7 +2,7 @@
 
 - [How Pinaka works?](#how-pinaka-works)
 - [How is Pinaka different from Symex?](#how-is-pinaka-different-from-symex)
-- [Pinaka & SVCOMP 2019](#pinaka-svcomp-2019)
+- [Pinaka in SVCOMP 2019](#pinaka-in-svcomp-2019)
 - [General Execution Instructions](#general-execution-instructions)
 - [SVCOMP Style Execution](#svcomp-style-execution)
 
@@ -67,7 +67,7 @@ For this reason,(for Pinaka) while exploring a loop iteration along a path, when
 
 **Note**: Later version of Symex implements Eager Feasibility checks and Breadth First Search. However, these features are missing from the version/fork used by Pinaka.
 
-## Pinaka & SVCOMP 2019
+## Pinaka in SVCOMP 2019
 
 - The version of Pinaka (Pinaka-0.1) that participated in SVCOMP 2019 ran **Depth First Search** in **Partial Incremental Mode**. These choices were simply a result of better performance on SVCOMP Benchmarks during testing phase.
 - Pinaka-0.1 made use of **Glucose-Syrup**(Version 4.0) as its solver back-end for SVCOMP 2019 to yield a better overall performance.
