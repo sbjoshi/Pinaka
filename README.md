@@ -10,7 +10,7 @@
 - [General Execution Instructions](#general-execution-instructions)
 - [SVCOMP Style Execution](#svcomp-style-execution)
 	* [INSTRUCTIONS to configure Pinaka in Benchexec](#instructions-to-configure-pinaka-in-benchexec)
-	* [InSTRUCTIONS to run BENCHMARKS](#instructions-to-run-benchmarks)
+	* [INSTRUCTIONS to run BENCHMARKS](#instructions-to-run-benchmarks)
 - [System Requirements](#system-requirements)
 - [Contributors](#contributors)
 - [Acknowledgements](#acknowledgements)
