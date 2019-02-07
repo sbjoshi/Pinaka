@@ -1,5 +1,10 @@
 # Pinaka 0.1
 
+- [How Pinaka works?](#how-pinaka-works?)
+- [How Pinaka is different from Symex?](#how-pinaka-is-different-from-symex?)
+
+
+
 ## How Pinaka works?
 Pinaka is a *single-path* symbolic execution engine incorporated with incremental solving and eager infeasibility checks. The keyword *single-path* means that at any given moment, Pinaka is focused
 only on one particular path. Two paths are **never** merged. This may lead to path explosion problem as the number of branches increase in a program. That is where eager infeasibility checks
