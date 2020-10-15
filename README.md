@@ -232,6 +232,6 @@ Source code for the tool to be made public soon.
 ## Contributors
    *	Eti Chaudhary, Masters student in the [Department of Computer Science and Engineering](https://cse.iith.ac.in), [IIT Hyderabad](http://www.iith.ac.in)
    *	[Saurabh Joshi](https://sbjoshi.github.io), Assistant Professor in the [Department of Computer Science and Engineering](https://cse.iith.ac.in), [IIT Hyderabad](https://www.iith.ac.in)
-
+   *	[Akash Banerjee](https://tifitis.github.io), Master's student in the [Department of Computer Science and Engineering](https://cse.iith.ac.in), [IIT Hyderabad](http://www.iith.ac.in)
 ## Acknowledgements
    * This project is financially supported by Department of Science and Technology (DST) of India, through ECR 2017 grant.
